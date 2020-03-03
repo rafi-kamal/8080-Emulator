@@ -124,6 +124,28 @@ int main(int argc, char **argv) {
             // Loads 1 byte immediate data into the register or memory location.
             // If a memory reference is specified, then the memory byte addressed by H and L registers is operated upon.
             printf("MVI %s,#$%s", getInrDcrLxiRegister(opCode), getOneHexByte(binaryFile));
+        } // 0x07
+        else if (opCode == 0x07) {
+            // Rotate the content of the accumulator one bit to the left.
+            // The carry bit is set equal to the high-order bit of the accumulator.
+            printf("RLC");
+        } // 0xF
+        else if (opCode == 0x0F) {
+            // Rotate the content of the accumulator one bit to the right.
+            // The carry bit is set equal to the low-order bit of the accumulator.
+            printf("RRC");
+        } // 0x17
+        else if (opCode == 0x17) {
+            // Rotate the content of the accumulator one bit to the left, through the carry bit.
+            // The high-order bit of the accumulator replaces the carry bit,
+            // while the carry bit replaces the low-order bit of the accumulator.
+            printf("RAL");
+        } // 0x1F
+        else if (opCode == 0x1F) {
+            // Rotate the content of the accumulator one bit to the right, through the carry bit.
+            // The low-order bit of the accumulator replaces the carry bit,
+            // while the carry bit replaces the high-order bit of the accumulator.
+            printf("RAR");
         }
         printf("\n");
     }
