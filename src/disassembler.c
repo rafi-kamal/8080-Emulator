@@ -144,7 +144,7 @@ int main(int argc, char **argv) {
             // Loads the content of the memory location addressed by the registers B and C or C and D to the
             // accumulator.
             printf("LDAX %s", getStaxLdaxRegisterPair(opCode));
-        } // 0x03, 0x13, 0x23, 0x33
+        } // 0x0B, 0x1B, 0x2B, 0x3B
         else if ((opCode & 0xCF) == 0x0B) {
             // Format: DCX rp
             // rp can be B, D, H, or SP
