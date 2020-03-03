@@ -15,7 +15,7 @@ char *getOneHexByte(FILE *fp) {
     return hexByte;
 }
 
-char *getLxiInxRegisterPair(int opCode) {
+char *getRegisterPairInBits23(int opCode) {
     switch ((opCode & 0x30) >> 4) {
         case 0b00:
             return "B";
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
             // Loads 2 bytes immediate data into the register pair.
             // The higher 8 bits of the immediate data is loaded into the first register of the pair (e.g. C),
             // while the lower 8 bits of the immediate data is loaded into the second register of the pair (e.g. D).
-            printf("LXI %s,#$%s", getLxiInxRegisterPair(opCode), getLittleIndian2HexBytes(binaryFile));
+            printf("LXI %s,#$%s", getRegisterPairInBits23(opCode), getLittleIndian2HexBytes(binaryFile));
         } // 0x02, 0x12
         else if ((opCode & 0xEF) == 0x02) {
             // Format: STAX rp
@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
             // Format: INX rp
             // rp can be B, D, H, or SP
             // Increments the 16 bit data held in the specified register by one.
-            printf("INX %s", getLxiInxRegisterPair(opCode));
+            printf("INX %s", getRegisterPairInBits23(opCode));
         } // 0x04, 0x0C, 0x14, 0x1C, 0x24, 0x2C, 0x34, 0x3C
         else if ((opCode & 0xC7) == 0x04) {
             // Format: INR reg
@@ -129,6 +129,14 @@ int main(int argc, char **argv) {
             // Rotate the content of the accumulator one bit to the left.
             // The carry bit is set equal to the high-order bit of the accumulator.
             printf("RLC");
+        } // 0x09, 0x19, 0x29, 0x39
+        else if ((opCode & 0xCF) == 0x09) {
+            // Format: DAD rp
+            // rp can be B, D, H, or SP
+            // Flags affected: CY
+            // The 16 bit number in the specified register pair is added to the 16 bit number held in the H and L
+            // registers. The result replaces the contents of the H and L registers.
+            printf("DAD %s", getRegisterPairInBits23(opCode));
         } // 0xF
         else if (opCode == 0x0F) {
             // Rotate the content of the accumulator one bit to the right.
