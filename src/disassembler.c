@@ -1,12 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char* getLittleIndian2HexBytes(FILE* fp) {
+char *getLittleIndian2HexBytes(FILE *fp) {
     static char hexBytes[3];
     int lowBit = fgetc(fp);
     int highBit = fgetc(fp);
-    sprintf(hexBytes,"%02X%02X", highBit, lowBit);
+    sprintf(hexBytes, "%02X%02X", highBit, lowBit);
     return hexBytes;
+}
+
+char *getOneHexByte(FILE *fp) {
+    static char hexByte[2];
+    sprintf(hexByte, "%02X", fgetc(fp));
+    return hexByte;
 }
 
 char *getLxiInxRegisterPair(int opCode) {
@@ -33,7 +39,7 @@ char *getStaxLdaxRegisterPair(int opCode) {
     }
 }
 
-char *getInrDcrRegister(int opCode) {
+char *getInrDcrLxiRegister(int opCode) {
     switch ((opCode & 0x38) >> 3) {
         case 0:
             return "B";
@@ -74,13 +80,13 @@ int main(int argc, char **argv) {
             printf("NOP");
         } // 0x01, 0x11, 0x21, 0x31
         else if ((opCode & 0xCF) == 0x01) {
-            // Format: LXI rp, data
+            // Format: LXI rp,data
             // rp can be B, D, H, or SP
             // data is a 16-bit quantity.
-            // Loads immediate data into the register pair.
+            // Loads 2 bytes immediate data into the register pair.
             // The higher 8 bits of the immediate data is loaded into the first register of the pair (e.g. C),
             // while the lower 8 bits of the immediate data is loaded into the second register of the pair (e.g. D).
-            printf("LXI %s, #$%s", getLxiInxRegisterPair(opCode), getLittleIndian2HexBytes(binaryFile));
+            printf("LXI %s,#$%s", getLxiInxRegisterPair(opCode), getLittleIndian2HexBytes(binaryFile));
         } // 0x02, 0x12
         else if ((opCode & 0xEF) == 0x02) {
             // Format: STAX rp
@@ -97,21 +103,27 @@ int main(int argc, char **argv) {
         } // 0x04, 0x0C, 0x14, 0x1C, 0x24, 0x2C, 0x34, 0x3C
         else if ((opCode & 0xC7) == 0x04) {
             // Format: INR reg
-            // reg can be B, C, D, E, H, L, M (memory), A
+            // reg can be B, C, D, E, H, L, M (memory), or A
             // Flags affected: Z, S, P, AC
             // Increments the specified register or memory location by one.
-            // If a memory reference is specified (INR M), then the memory byte addressed by H and L registers
-            // is operated upon.
-            printf("INR %s", getInrDcrRegister(opCode));
+            // If a memory reference is specified, then the memory byte addressed by H and L registers is operated upon.
+            printf("INR %s", getInrDcrLxiRegister(opCode));
         } // 0x05, 0x0D, 0x15, 0x1D, 0x25, 0x2D, 0x35, 0x3D
         else if ((opCode & 0xC7) == 0x05) {
             // Format: DCR reg
-            // reg can be B, C, D, E, H, L, M (memory), A
+            // reg can be B, C, D, E, H, L, M (memory), or A
             // Flags affected: Z, S, P, AC
             // Decrements the specified register or memory location by one.
-            // If a memory reference is specified (INR M), then the memory byte addressed by H and L registers
-            // is operated upon.
-            printf("DCR %s", getInrDcrRegister(opCode));
+            // If a memory reference is specified, then the memory byte addressed by H and L registers is operated upon.
+            printf("DCR %s", getInrDcrLxiRegister(opCode));
+        } // 0x06, 0x0E, 0x16, 0x1E, 0x26, 0x2E, 0x36, 0x3E
+        else if ((opCode & 0xC7) == 0x06) {
+            // Format: MVI reg,data
+            // reg can be B, C, D, E, H, L, M (memory), or A
+            // data is a 8-bit quantity.
+            // Loads 1 byte immediate data into the register or memory location.
+            // If a memory reference is specified, then the memory byte addressed by H and L registers is operated upon.
+            printf("MVI %s,#$%s", getInrDcrLxiRegister(opCode), getOneHexByte(binaryFile));
         }
         printf("\n");
     }
