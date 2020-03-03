@@ -98,10 +98,20 @@ int main(int argc, char **argv) {
         else if ((opCode & 0xC7) == 0x04) {
             // Format: INR reg
             // reg can be B, C, D, E, H, L, M (memory), A
+            // Flags affected: Z, S, P, AC
             // Increments the specified register or memory location by one.
             // If a memory reference is specified (INR M), then the memory byte addressed by H and L registers
             // is operated upon.
             printf("INR %s", getInrDcrRegister(opCode));
+        } // 0x05, 0x0D, 0x15, 0x1D, 0x25, 0x2D, 0x35, 0x3D
+        else if ((opCode & 0xC7) == 0x05) {
+            // Format: DCR reg
+            // reg can be B, C, D, E, H, L, M (memory), A
+            // Flags affected: Z, S, P, AC
+            // Decrements the specified register or memory location by one.
+            // If a memory reference is specified (INR M), then the memory byte addressed by H and L registers
+            // is operated upon.
+            printf("DCR %s", getInrDcrRegister(opCode));
         }
         printf("\n");
     }
