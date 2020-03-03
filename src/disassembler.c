@@ -137,6 +137,19 @@ int main(int argc, char **argv) {
             // The 16 bit number in the specified register pair is added to the 16 bit number held in the H and L
             // registers. The result replaces the contents of the H and L registers.
             printf("DAD %s", getRegisterPairInBits23(opCode));
+        } // 0x0A, 0x1A
+        else if ((opCode & 0xEF) == 0x0A) {
+            // Format: LDAX rp
+            // rp can be B or C.
+            // Loads the content of the memory location addressed by the registers B and C or C and D to the
+            // accumulator.
+            printf("LDAX %s", getStaxLdaxRegisterPair(opCode));
+        } // 0x03, 0x13, 0x23, 0x33
+        else if ((opCode & 0xCF) == 0x0B) {
+            // Format: DCX rp
+            // rp can be B, D, H, or SP
+            // Decrements the 16 bit data held in the specified register by one.
+            printf("DCX %s", getRegisterPairInBits23(opCode));
         } // 0xF
         else if (opCode == 0x0F) {
             // Rotate the content of the accumulator one bit to the right.
