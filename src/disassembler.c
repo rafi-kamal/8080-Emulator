@@ -181,6 +181,19 @@ int main(int argc, char **argv) {
             // The byte at the 16-bit memory address is stored in the L register.
             // The byte at the next higher memory address is stored in the H register.
             printf("LHLD %s", getLittleIndian2HexBytes(binaryFile));
+        } // 0x27
+        else if (opCode == 0x27) {
+            // The 8-bit hexadecimal number in the accumulator is converted to two 4-bit binary coded decimal digits.
+            // This is a two step process:
+            // 1. If the least significant 4 bits in the accumulator is greater than 9, or, if the AC (auxiliary carry)
+            //   flag is set, then the accumulator is incremented by six. If a carry out of the least four significant
+            //   bits occurs, then AC is set. Otherwise it is reset.
+            // 2. If the most significant 4 bits in the accumulator is greater than 9, or, if the CY (carry) flag is
+            //   set, then the most significant 4 bits of the accumulator are incremented by six. If a carry out of the
+            //   most significant four bits occurs, then CY is set. Otherwise it is unaffected.
+            //
+            // Flags affected: Z, S, P, CY, AC
+            printf("DAA");
         }
         printf("\n");
     }
