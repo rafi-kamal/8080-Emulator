@@ -167,6 +167,20 @@ int main(int argc, char **argv) {
             // The low-order bit of the accumulator replaces the carry bit,
             // while the carry bit replaces the high-order bit of the accumulator.
             printf("RAR");
+        } // 0x22
+        else if (opCode == 0x22) {
+            // Format: SHLD addr
+            // addr is a 16-bit value
+            // The content of the L register is stored at the 16-bit memory address.
+            // The content of the H register is stored at the next higher memory address.
+            printf("SHLD %s", getLittleIndian2HexBytes(binaryFile));
+        } // 0x2A
+        else if (opCode == 0x2A) {
+            // Format: LHLD addr
+            // addr is a 16-bit value
+            // The byte at the 16-bit memory address is stored in the L register.
+            // The byte at the next higher memory address is stored in the H register.
+            printf("LHLD %s", getLittleIndian2HexBytes(binaryFile));
         }
         printf("\n");
     }
