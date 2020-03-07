@@ -381,34 +381,76 @@ int main(int argc, char **argv) {
         else if (opCode == 0xC8) {
             // Returns if the zero bit set.
             printf("RZ");
-        } // 0xC8
+        } // 0xC9
         else if (opCode == 0xC9) {
             // Returns to the instruction immediately following the last call instruction.
             printf("RET");
+        } // 0xCA
+        else if (opCode == 0xCA) {
+            // Jump to the specified address if zero bit is set.
+            printf("JZ %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xCC
+        else if (opCode == 0xCC) {
+            // A call operation is performed to the address if the zero bit is set.
+            printf("CZ %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xCD
+        else if (opCode == 0xCD) {
+            // A call operation is unconditionally performed.
+            printf("CALL %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xCE
+        else if (opCode == 0xCE) {
+            // Format: ACI data
+            // data is a 8 byte value
+            // The byte of immediate data is added to the accumulator along with carry bit.
+            printf("ACI %s", getOneHexByte(binaryFile, &instructionPointer));
         } // 0xD0
         else if (opCode == 0xD0) {
             // Returns if the carry bit is unset.
             printf("RNC");
+        } // 0xD2
+        else if (opCode == 0xD2) {
+            // Jump to the specified address if carry bit is not set.
+            printf("JNC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xD8
         else if (opCode == 0xD8) {
             // Returns if the carry bit is set.
             printf("RC");
+        } // 0xDA
+        else if (opCode == 0xDA) {
+            // Jump to the specified address if carry bit is set.
+            printf("JC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xE0
         else if (opCode == 0xE0) {
             // Returns if the parity bit is zero (odd parity).
             printf("RPO");
+        } // 0xE2
+        else if (opCode == 0xE2) {
+            // Jump to the specified address if the parity bit is zero.
+            printf("JPO %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xE8
         else if (opCode == 0xE8) {
             // Returns if the parity bit is set (even parity).
             printf("RPE");
+        } // 0xEA
+        else if (opCode == 0xEA) {
+            // Jump to the specified address if the parity bit is set.
+            printf("JPE %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xF0
         else if (opCode == 0xF0) {
             // Returns if the sign bit is zero (indicating a positive result).
             printf("RP");
+        } // 0xF2
+        else if (opCode == 0xF2) {
+            // Jump to the specified address if the sign bit is zero.
+            printf("JP %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xF8
         else if (opCode == 0xF8) {
             // Returns if the sign bit is one (indicating a minus result).
             printf("RM");
+        } // 0xFA
+        else if (opCode == 0xFA) {
+            // Jump to the specified address the sign bit is one.
+            printf("JM %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         }
         printf("\n");
     }
