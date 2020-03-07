@@ -101,6 +101,8 @@ int main(int argc, char **argv) {
     FILE *binaryFile = fopen(binaryFileName, "rb");
     int opCode;
     int instructionPointer = 0;
+
+    // Documentation for some of instructions has been copied from the Intel's 8080 Assembly Language Programming Manual
     while ((opCode = readNextByte(binaryFile, &instructionPointer)) != EOF) {
         printf("%04X: ", instructionPointer - 1);
         // OxOO
@@ -250,6 +252,8 @@ int main(int argc, char **argv) {
             printf("CMC");
         } // 0x76
         else if (opCode == 0x76) {
+            // The program counter is incremented to the next sequential instruction. The CPU then enters the STOPPED
+            // state and no furthur activity takes place until an interrupt occurs.
             printf("HLT");
         } // 0x40-0x7F, except 0x76
         else if ((opCode & 0xC0) == 0x40) {
