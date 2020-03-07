@@ -210,6 +210,14 @@ int main(int argc, char **argv) {
             // addr is a 16-bit value
             // The byte at the specified memory address replaces the contents of the accumulator
             printf("LDA %s", getLittleIndian2HexBytes(binaryFile));
+        } // 0x37
+        else if (opCode == 0x37) {
+            // Set the carry bit to 1
+            printf("STC");
+        } // 0x3F
+        else if (opCode == 0x3F) {
+            // Complement the carry bit
+            printf("CMC");
         }
         printf("\n");
     }
