@@ -1,18 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-char *getLittleIndian2HexBytes(FILE *fp) {
+int readNextByte(FILE *fp, int *instructionPointer) {
+    (*instructionPointer)++;
+    return fgetc(fp);
+}
+
+char *getLittleIndian2HexBytes(FILE *fp, int *instructionPointer) {
     static char hexBytes[3];
-    int lowBit = fgetc(fp);
-    int highBit = fgetc(fp);
+    int lowBit = readNextByte(fp, instructionPointer);
+    int highBit = readNextByte(fp, instructionPointer);
     sprintf(hexBytes, "%02X%02X", highBit, lowBit);
     return hexBytes;
 }
 
-char *getOneHexByte(FILE *fp) {
+char *getOneHexByte(FILE *fp, int *instructionPointer) {
     static char hexByte[2];
-    sprintf(hexByte, "%02X", fgetc(fp));
+    sprintf(hexByte, "%02X", readNextByte(fp, instructionPointer));
     return hexByte;
 }
 
@@ -102,7 +106,9 @@ int main(int argc, char **argv) {
 
     FILE *binaryFile = fopen(binaryFileName, "rb");
     int opCode;
-    while ((opCode = fgetc(binaryFile)) != EOF) {
+    int instructionPointer = 0;
+    while ((opCode = readNextByte(binaryFile, &instructionPointer)) != EOF) {
+        printf("%04X: ", instructionPointer - 1);
         // OxOO
         if (opCode == 0x00) {
             // No operation
@@ -115,7 +121,8 @@ int main(int argc, char **argv) {
             // Loads 2 bytes immediate data into the register pair.
             // The higher 8 bits of the immediate data is loaded into the first register of the pair (e.g. C),
             // while the lower 8 bits of the immediate data is loaded into the second register of the pair (e.g. D).
-            printf("LXI %s,#$%s", getRegisterPairInBits23(opCode), getLittleIndian2HexBytes(binaryFile));
+            printf("LXI %s,#$%s", getRegisterPairInBits23(opCode),
+                   getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0x02, 0x12
         else if ((opCode & 0xEF) == 0x02) {
             // Format: STAX rp
@@ -152,7 +159,7 @@ int main(int argc, char **argv) {
             // data is a 8-bit quantity.
             // Loads 1 byte immediate data into the register or memory location.
             // If a memory reference is specified, then the memory byte addressed by H and L registers is operated upon.
-            printf("MVI %s,#$%s", getInrDcrLxiRegister(opCode), getOneHexByte(binaryFile));
+            printf("MVI %s,#$%s", getInrDcrLxiRegister(opCode), getOneHexByte(binaryFile, &instructionPointer));
         } // 0x07
         else if (opCode == 0x07) {
             // Rotate the content of the accumulator one bit to the left.
@@ -202,7 +209,7 @@ int main(int argc, char **argv) {
             // addr is a 16-bit value
             // The content of the L register is stored at the 16-bit memory address.
             // The content of the H register is stored at the next higher memory address.
-            printf("SHLD %s", getLittleIndian2HexBytes(binaryFile));
+            printf("SHLD %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0x27
         else if (opCode == 0x27) {
             // The 8-bit hexadecimal number in the accumulator is converted to two 4-bit binary coded decimal digits.
@@ -222,7 +229,7 @@ int main(int argc, char **argv) {
             // addr is a 16-bit value
             // The byte at the 16-bit memory address is stored in the L register.
             // The byte at the next higher memory address is stored in the H register.
-            printf("LHLD %s", getLittleIndian2HexBytes(binaryFile));
+            printf("LHLD %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0x2F
         else if (opCode == 0x2F) {
             // Each bit in the accumulator is complemented
@@ -232,13 +239,13 @@ int main(int argc, char **argv) {
             // Format: STA addr
             // addr is a 16-bit value
             // The contents of the accumulator replaces the byte at the specified memory address
-            printf("STA %s", getLittleIndian2HexBytes(binaryFile));
+            printf("STA %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0x4A
         else if (opCode == 0x4A) {
             // Format: LDA addr
             // addr is a 16-bit value
             // The byte at the specified memory address replaces the contents of the accumulator
-            printf("LDA %s", getLittleIndian2HexBytes(binaryFile));
+            printf("LDA %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0x37
         else if (opCode == 0x37) {
             // Set the carry bit to 1
@@ -347,11 +354,11 @@ int main(int argc, char **argv) {
         } // 0xC2
         else if (opCode == 0xC2) {
             // Jump to the specified address if zero bit is unset.
-            printf("JNZ %s", getLittleIndian2HexBytes(binaryFile));
+            printf("JNZ %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xC3
         else if (opCode == 0xC3) {
             // Jump to the specified address.
-            printf("JMP %s", getLittleIndian2HexBytes(binaryFile));
+            printf("JMP %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xC8
         else if (opCode == 0xC8) {
             // Returns if the zero bit set
