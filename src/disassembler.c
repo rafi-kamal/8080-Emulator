@@ -377,11 +377,38 @@ int main(int argc, char **argv) {
             // return to that address. Program execution continues at the memory address 0b000000000EXP000B.
             // Normally this instruction is used for interrupt handling.
             printf("RST %x", (opCode & 0x38) >> 3);
-        }
-            // 0xC8
+        } // 0xC8
         else if (opCode == 0xC8) {
-            // Returns if the zero bit set
+            // Returns if the zero bit set.
             printf("RZ");
+        } // 0xC8
+        else if (opCode == 0xC9) {
+            // Returns to the instruction immediately following the last call instruction.
+            printf("RET");
+        } // 0xD0
+        else if (opCode == 0xD0) {
+            // Returns if the carry bit is unset.
+            printf("RNC");
+        } // 0xD8
+        else if (opCode == 0xD8) {
+            // Returns if the carry bit is set.
+            printf("RC");
+        } // 0xE0
+        else if (opCode == 0xE0) {
+            // Returns if the parity bit is zero (odd parity).
+            printf("RPO");
+        } // 0xE8
+        else if (opCode == 0xE8) {
+            // Returns if the parity bit is set (even parity).
+            printf("RPE");
+        } // 0xF0
+        else if (opCode == 0xF0) {
+            // Returns if the sign bit is zero (indicating a positive result).
+            printf("RP");
+        } // 0xF8
+        else if (opCode == 0xF8) {
+            // Returns if the sign bit is one (indicating a minus result).
+            printf("RM");
         }
         printf("\n");
     }
