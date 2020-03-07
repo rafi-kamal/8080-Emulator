@@ -271,6 +271,37 @@ int main(int argc, char **argv) {
             // If there is no carry out of the highest order bit, it indicates that a borrow occurred.
             // In that case the carry bit is set, otherwise it is reset.
             printf("SBC %s", getRegister(opCode & 0x7));
+        } // 0xA0-0xA7
+        else if ((opCode & 0xF8) == 0xA0) {
+            // Format ANA, reg
+            // reg can be B, C, D, E, H, L, M (memory), or A
+            // Flags affected: CY, S, Z, P
+            // The specified byte is ANDed to the content of the accumulator. The carry bit is reset to zero.
+            printf("ANA %s", getRegister(opCode & 0x7));
+        } // 0xA8-0xAF
+        else if ((opCode & 0xF8) == 0xA8) {
+            // Format XRA, reg
+            // reg can be B, C, D, E, H, L, M (memory), or A
+            // Flags affected: CY, S, Z, P, AC
+            // The specified byte is XORed to the content of the accumulator. The carry bit is reset to zero.
+            printf("XRA %s", getRegister(opCode & 0x7));
+        } // 0xB0-0xB7
+        else if ((opCode & 0xF8) == 0xB0) {
+            // Format ORA, reg
+            // reg can be B, C, D, E, H, L, M (memory), or A
+            // Flags affected: CY, S, Z, P
+            // The specified byte is ORed to the content of the accumulator. The carry bit is reset to zero.
+            printf("ORA %s", getRegister(opCode & 0x7));
+        } // 0xB8-0xB9
+        else if ((opCode & 0xF8) == 0xB8) {
+            // Format CMP, reg
+            // reg can be B, C, D, E, H, L, M (memory), or A
+            // Flags affected: CY, S, Z, P
+            // The specified byte is compared to the content of the accumulator. This is done by subtracting the byte
+            // from the accumulator content, but leaving both reg and accumulator unchanged. The condition bits are
+            // set according to the result, in particular, the zero bit set if the contents are unequal, otherwise it
+            // is reset.
+            printf("CMP %s", getRegister(opCode & 0x7));
         }
         printf("\n");
     }
