@@ -239,6 +239,38 @@ int main(int argc, char **argv) {
             // Format MOV dst, src
             // dst or src can be B, C, D, E, H, L, M (memory), or A
             printf("MOV %s", getMoveRegisters(opCode));
+        } // 0x80-0x87
+        else if ((opCode & 0xF8) == 0x80) {
+            // Format ADD, reg
+            // reg can be B, C, D, E, H, L, M (memory), or A
+            // Flags affected: CY, S, Z, P, AC
+            // The specified byte is added to the content of the accumulator
+            printf("ADD %s", getRegister(opCode & 0x7));
+        } // 0x88-0x8f
+        else if ((opCode & 0xF8) == 0x88) {
+            // Format ADC, reg
+            // reg can be B, C, D, E, H, L, M (memory), or A
+            // Flags affected: CY, S, Z, P, AC
+            // The specified byte plus the carry bit is added to the content of the accumulator
+            printf("ADC %s", getRegister(opCode & 0x7));
+        } // 0x90-0x97
+        else if ((opCode & 0xF8) == 0x90) {
+            // Format SUB, reg
+            // reg can be B, C, D, E, H, L, M (memory), or A
+            // Flags affected: CY, S, Z, P, AC
+            // The specified byte is subtracted from the content of the accumulator.
+            // If there is no carry out of the highest order bit, it indicates that a borrow occurred.
+            // In that case the carry bit is set, otherwise it is reset.
+            printf("SUB %s", getRegister(opCode & 0x7));
+        } // 0x98-0x9F
+        else if ((opCode & 0xF8) == 0x98) {
+            // Format SBB, reg
+            // reg can be B, C, D, E, H, L, M (memory), or A
+            // Flags affected: CY, S, Z, P, AC
+            // The specified byte and the carry bit is subtracted from the content of the accumulator.
+            // If there is no carry out of the highest order bit, it indicates that a borrow occurred.
+            // In that case the carry bit is set, otherwise it is reset.
+            printf("SBC %s", getRegister(opCode & 0x7));
         }
         printf("\n");
     }
