@@ -359,6 +359,10 @@ int main(int argc, char **argv) {
         else if (opCode == 0xC3) {
             // Jump to the specified address.
             printf("JMP %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xC4
+        else if (opCode == 0xC4) {
+            // A call operation is performed to the address if the zero bit is unset.
+            printf("CNZ %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xC8
         else if (opCode == 0xC8) {
             // Returns if the zero bit set
