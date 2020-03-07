@@ -363,7 +363,22 @@ int main(int argc, char **argv) {
         else if (opCode == 0xC4) {
             // A call operation is performed to the address if the zero bit is unset.
             printf("CNZ %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
-        } // 0xC8
+        } // 0xC6
+        else if (opCode == 0xC6) {
+            // Format: ADI data
+            // data is a 8 byte value
+            // The byte of immediate data is added to the accumulator.
+            printf("ADI %s", getOneHexByte(binaryFile, &instructionPointer));
+        } // 0xC7, 0xCF, 0xD7, 0xDF, 0xE7, 0xEF, 0xF7, 0xFF
+        else if ((opCode & 0xC7) == 0xC7) {
+            // Format: RST exp
+            // exp is a 3-bit value.
+            // The content of the program counter is pushed onto the stack, so that a subsequent RETURN instruction can
+            // return to that address. Program execution continues at the memory address 0b000000000EXP000B.
+            // Normally this instruction is used for interrupt handling.
+            printf("RST %x", (opCode & 0x38) >> 3);
+        }
+            // 0xC8
         else if (opCode == 0xC8) {
             // Returns if the zero bit set
             printf("RZ");
