@@ -14,12 +14,6 @@ char *getLittleIndian2HexBytes(FILE *fp, int *instructionPointer) {
     return hexBytes;
 }
 
-char *getOneHexByte(FILE *fp, int *instructionPointer) {
-    static char hexByte[2];
-    sprintf(hexByte, "%02X", readNextByte(fp, instructionPointer));
-    return hexByte;
-}
-
 char *getRegisterPairInBits23(int opCode) {
     switch ((opCode & 0x30) >> 4) {
         case 0b00:
@@ -159,7 +153,7 @@ int main(int argc, char **argv) {
             // data is a 8-bit quantity.
             // Loads 1 byte immediate data into the register or memory location.
             // If a memory reference is specified, then the memory byte addressed by H and L registers is operated upon.
-            printf("MVI %s,#$%s", getInrDcrLxiRegister(opCode), getOneHexByte(binaryFile, &instructionPointer));
+            printf("MVI %s,#$%02x", getInrDcrLxiRegister(opCode), readNextByte(binaryFile, &instructionPointer));
         } // 0x07
         else if (opCode == 0x07) {
             // Rotate the content of the accumulator one bit to the left.
@@ -368,7 +362,7 @@ int main(int argc, char **argv) {
             // Format: ADI data
             // data is a 8 byte value
             // The byte of immediate data is added to the accumulator.
-            printf("ADI %s", getOneHexByte(binaryFile, &instructionPointer));
+            printf("ADI %02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xC7, 0xCF, 0xD7, 0xDF, 0xE7, 0xEF, 0xF7, 0xFF
         else if ((opCode & 0xC7) == 0xC7) {
             // Format: RST exp
@@ -402,7 +396,7 @@ int main(int argc, char **argv) {
             // Format: ACI data
             // data is a 8 byte value
             // The byte of immediate data is added to the accumulator along with carry bit.
-            printf("ACI %s", getOneHexByte(binaryFile, &instructionPointer));
+            printf("ACI %02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xD0
         else if (opCode == 0xD0) {
             // Returns if the carry bit is unset.
@@ -411,6 +405,12 @@ int main(int argc, char **argv) {
         else if (opCode == 0xD2) {
             // Jump to the specified address if carry bit is not set.
             printf("JNC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xD3
+        else if (opCode == 0xD3) {
+            // Format: OUT exp
+            // exp is a 8-bit value
+            // The contents of the accumulator is sent to the device exp
+            printf("OUT %02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xD4
         else if (opCode == 0xD4) {
             // A call operation is performed if the carry bit is not set.
