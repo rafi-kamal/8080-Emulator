@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 char *getLittleIndian2HexBytes(FILE *fp) {
     static char hexBytes[3];
@@ -39,8 +40,8 @@ char *getStaxLdaxRegisterPair(int opCode) {
     }
 }
 
-char *getInrDcrLxiRegister(int opCode) {
-    switch ((opCode & 0x38) >> 3) {
+char *getRegister(int threeBits) {
+    switch (threeBits) {
         case 0:
             return "B";
         case 1:
@@ -58,9 +59,21 @@ char *getInrDcrLxiRegister(int opCode) {
         case 7:
             return "A";
         default:
-            fprintf(stderr, "Invalid opcode %02X", opCode);
+            fprintf(stderr, "Invalid register bits %02X", threeBits);
             exit(1);
     }
+}
+
+char *getInrDcrLxiRegister(int opCode) {
+    return getRegister((opCode & 0x38) >> 3);
+}
+
+char *getMoveRegisters(int opCode) {
+    char *src = getRegister(opCode & 0x7);
+    char *dst = getRegister((opCode >> 3) & 0x7);
+    static char moveRegisters[4];
+    sprintf(moveRegisters, "%s,%s", dst, src);
+    return moveRegisters;
 }
 
 int main(int argc, char **argv) {
@@ -218,6 +231,14 @@ int main(int argc, char **argv) {
         else if (opCode == 0x3F) {
             // Complement the carry bit
             printf("CMC");
+        } // 0x76
+        else if (opCode == 0x76) {
+            printf("HLT");
+        } // 0x40-0x7F, except 0x76
+        else if ((opCode & 0xC0) == 0x40) {
+            // Format MOV dst, src
+            // dst or src can be B, C, D, E, H, L, M (memory), or A
+            printf("MOV %s", getMoveRegisters(opCode));
         }
         printf("\n");
     }
