@@ -344,6 +344,14 @@ int main(int argc, char **argv) {
             // If PSW is specified, then the state of the five condition bits is stored.
             // The stack pointer is decremented by two after this operation.
             printf("PUSH %s", getRegisterPairForStackOperations(opCode));
+        } // 0xC2
+        else if (opCode == 0xC2) {
+            // Jump to the specified address if zero bit is unset.
+            printf("JNZ %s", getLittleIndian2HexBytes(binaryFile));
+        } // 0xC3
+        else if (opCode == 0xC3) {
+            // Jump to the specified address.
+            printf("JMP %s", getLittleIndian2HexBytes(binaryFile));
         } // 0xC8
         else if (opCode == 0xC8) {
             // Returns if the zero bit set
