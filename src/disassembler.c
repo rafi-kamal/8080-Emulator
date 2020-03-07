@@ -32,6 +32,22 @@ char *getRegisterPairInBits23(int opCode) {
     }
 }
 
+char *getRegisterPairForStackOperations(int opCode) {
+    switch ((opCode & 0x30) >> 4) {
+        case 0b00:
+            return "B";
+        case 0b01:
+            return "D";
+        case 0b10:
+            return "H";
+        case 0b11:
+            return "PSW";
+        default:
+            fprintf(stderr, "Invalid opcode %02X", opCode);
+            exit(1);
+    }
+}
+
 char *getStaxLdaxRegisterPair(int opCode) {
     if (opCode & 0x10) {
         return "D";
@@ -306,6 +322,28 @@ int main(int argc, char **argv) {
         else if (opCode == 0xC0) {
             // Returns if the zero bit is not set
             printf("RNZ");
+        } // 0xC1, 0xD1, 0xE1, 0xF1
+        else if ((opCode & 0xCF) == 0xC1) {
+            // Format: POP rp
+            // reg can be B, D, H, or PSW
+            // Flags affected: CY, S, Z, P only if reg is PSW
+            // The contents of the specified registers are restored from the stack. The content of the first register
+            // is restored from the byte addressed by the stack pointer, and the content of the second register is
+            // restored from the byte at the address one greater than address indicated by the stack pointer.
+            // If PSW is specified, then the state of the five condition bits are restored.
+            // The stack pointer is incremented by two after this operation.
+            printf("POP %s", getRegisterPairForStackOperations(opCode));
+        } // 0xC5, 0xD5, 0xE5, 0xF5
+        else if ((opCode & 0xCF) == 0xC5) {
+            // Format: PUSH rp
+            // reg can be B, D, H, or PSW
+            // Flags affected: CY, S, Z, P only if reg is PSW
+            // The contents of the specified registers are stored in the stack. The content of the first register
+            // is stored at the byte addressed by the stack pointer, and the content of the second register is
+            // is stored at the byte at the address one greater than address indicated by the stack pointer.
+            // If PSW is specified, then the state of the five condition bits is stored.
+            // The stack pointer is decremented by two after this operation.
+            printf("PUSH %s", getRegisterPairForStackOperations(opCode));
         } // 0xC8
         else if (opCode == 0xC8) {
             // Returns if the zero bit set
