@@ -292,14 +292,14 @@ int main(int argc, char **argv) {
             // Flags affected: CY, S, Z, P
             // The specified byte is ORed to the content of the accumulator. The carry bit is reset to zero.
             printf("ORA %s", getRegister(opCode & 0x7));
-        } // 0xB8-0xB9
+        } // 0xB8-0xBF
         else if ((opCode & 0xF8) == 0xB8) {
             // Format CMP, reg
             // reg can be B, C, D, E, H, L, M (memory), or A
             // Flags affected: CY, S, Z, P
             // The specified byte is compared to the content of the accumulator. This is done by subtracting the byte
             // from the accumulator content, but leaving both reg and accumulator unchanged. The condition bits are
-            // set according to the result, in particular, the zero bit set if the contents are unequal, otherwise it
+            // set according to the result, in particular, the zero bit set if the contents are equal, otherwise it
             // is reset.
             printf("CMP %s", getRegister(opCode & 0x7));
         }
