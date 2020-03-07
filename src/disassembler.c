@@ -411,6 +411,10 @@ int main(int argc, char **argv) {
         else if (opCode == 0xD2) {
             // Jump to the specified address if carry bit is not set.
             printf("JNC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xD4
+        else if (opCode == 0xD4) {
+            // A call operation is performed if the carry bit is not set.
+            printf("CNC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xD8
         else if (opCode == 0xD8) {
             // Returns if the carry bit is set.
@@ -419,6 +423,10 @@ int main(int argc, char **argv) {
         else if (opCode == 0xDA) {
             // Jump to the specified address if carry bit is set.
             printf("JC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xDC
+        else if (opCode == 0xDC) {
+            // A call operation is performed to the carry bit is set.
+            printf("CC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xE0
         else if (opCode == 0xE0) {
             // Returns if the parity bit is zero (odd parity).
@@ -427,6 +435,10 @@ int main(int argc, char **argv) {
         else if (opCode == 0xE2) {
             // Jump to the specified address if the parity bit is zero.
             printf("JPO %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xE4
+        else if (opCode == 0xE4) {
+            // A call operation is performed to the parity bit is zero.
+            printf("CPO %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xE8
         else if (opCode == 0xE8) {
             // Returns if the parity bit is set (even parity).
@@ -435,6 +447,10 @@ int main(int argc, char **argv) {
         else if (opCode == 0xEA) {
             // Jump to the specified address if the parity bit is set.
             printf("JPE %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xEC
+        else if (opCode == 0xEC) {
+            // A call operation is performed to the address if the parity bit is set.
+            printf("CPE %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xF0
         else if (opCode == 0xF0) {
             // Returns if the sign bit is zero (indicating a positive result).
@@ -443,6 +459,10 @@ int main(int argc, char **argv) {
         else if (opCode == 0xF2) {
             // Jump to the specified address if the sign bit is zero.
             printf("JP %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xF4
+        else if (opCode == 0xF4) {
+            // A call operation is performed to the sign bit is zero.
+            printf("CP %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xF8
         else if (opCode == 0xF8) {
             // Returns if the sign bit is one (indicating a minus result).
@@ -451,6 +471,10 @@ int main(int argc, char **argv) {
         else if (opCode == 0xFA) {
             // Jump to the specified address the sign bit is one.
             printf("JM %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xFC
+        else if (opCode == 0xFC) {
+            // A call operation is performed to the address if the sign bit is one.
+            printf("CM %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         }
         printf("\n");
     }
