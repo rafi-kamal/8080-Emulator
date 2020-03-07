@@ -302,6 +302,14 @@ int main(int argc, char **argv) {
             // set according to the result, in particular, the zero bit set if the contents are equal, otherwise it
             // is reset.
             printf("CMP %s", getRegister(opCode & 0x7));
+        } // 0xC0
+        else if (opCode == 0xC0) {
+            // Returns if the zero bit is not set
+            printf("RNZ");
+        } // 0xC8
+        else if (opCode == 0xC8) {
+            // Returns if the zero bit set
+            printf("RZ");
         }
         printf("\n");
     }
