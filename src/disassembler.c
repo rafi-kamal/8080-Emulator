@@ -174,13 +174,6 @@ int main(int argc, char **argv) {
             // The content of the L register is stored at the 16-bit memory address.
             // The content of the H register is stored at the next higher memory address.
             printf("SHLD %s", getLittleIndian2HexBytes(binaryFile));
-        } // 0x2A
-        else if (opCode == 0x2A) {
-            // Format: LHLD addr
-            // addr is a 16-bit value
-            // The byte at the 16-bit memory address is stored in the L register.
-            // The byte at the next higher memory address is stored in the H register.
-            printf("LHLD %s", getLittleIndian2HexBytes(binaryFile));
         } // 0x27
         else if (opCode == 0x27) {
             // The 8-bit hexadecimal number in the accumulator is converted to two 4-bit binary coded decimal digits.
@@ -194,6 +187,29 @@ int main(int argc, char **argv) {
             //
             // Flags affected: Z, S, P, CY, AC
             printf("DAA");
+        } // 0x2A
+        else if (opCode == 0x2A) {
+            // Format: LHLD addr
+            // addr is a 16-bit value
+            // The byte at the 16-bit memory address is stored in the L register.
+            // The byte at the next higher memory address is stored in the H register.
+            printf("LHLD %s", getLittleIndian2HexBytes(binaryFile));
+        } // 0x2F
+        else if (opCode == 0x2F) {
+            // Each bit in the accumulator is complemented
+            printf("CMA");
+        } // 0x32
+        else if (opCode == 0x32) {
+            // Format: STA addr
+            // addr is a 16-bit value
+            // The contents of the accumulator replaces the byte at the specified memory address
+            printf("STA %s", getLittleIndian2HexBytes(binaryFile));
+        } // 0x4A
+        else if (opCode == 0x4A) {
+            // Format: LDA addr
+            // addr is a 16-bit value
+            // The byte at the specified memory address replaces the contents of the accumulator
+            printf("LDA %s", getLittleIndian2HexBytes(binaryFile));
         }
         printf("\n");
     }
