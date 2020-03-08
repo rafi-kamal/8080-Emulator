@@ -420,7 +420,7 @@ int main(int argc, char **argv) {
             // Format: OUT exp
             // exp is a 8-bit value
             // The contents of the accumulator is sent to the device exp
-            printf("%-7s %02x", "OUT", readNextByte(binaryFile, &instructionPointer));
+            printf("%-7s #$%02x", "OUT", readNextByte(binaryFile, &instructionPointer));
         } // 0xD4
         else if (opCode == 0xD4) {
             // A call operation is performed if the carry bit is not set.
@@ -445,7 +445,7 @@ int main(int argc, char **argv) {
             // Format: IN exp
             // exp is a 8-bit value
             // A byte of data is read from the device number exp and it replaces the contents of the accumulator
-            printf("%-7s %02x", "IN", readNextByte(binaryFile, &instructionPointer));
+            printf("%-7s #$%02x", "IN", readNextByte(binaryFile, &instructionPointer));
         } // 0xDC
         else if (opCode == 0xDC) {
             // A call operation is performed to the carry bit is set.
