@@ -239,16 +239,16 @@ int main(int argc, char **argv) {
             // addr is a 16-bit value
             // The contents of the accumulator replaces the byte at the specified memory address
             printf("STA %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
-        } // 0x4A
-        else if (opCode == 0x4A) {
-            // Format: LDA addr
-            // addr is a 16-bit value
-            // The byte at the specified memory address replaces the contents of the accumulator
-            printf("LDA %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0x37
         else if (opCode == 0x37) {
             // Set the carry bit to 1
             printf("STC");
+        } // 0x4A
+        else if (opCode == 0x3A) {
+            // Format: LDA addr
+            // addr is a 16-bit value
+            // The byte at the specified memory address replaces the contents of the accumulator
+            printf("LDA %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0x3F
         else if (opCode == 0x3F) {
             // Complement the carry bit
@@ -464,6 +464,12 @@ int main(int argc, char **argv) {
         else if (opCode == 0xE2) {
             // Jump to the specified address if the parity bit is zero.
             printf("JPO %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xE3
+        else if (opCode == 0xE3) {
+            // The content of the L register is exchanged with the content of the memory byte addressed by the stack
+            // pointer. The content of the H register is exchanged with the address that's one greater than the address
+            // referenced by the stack pointer.
+            printf("XTHL");
         } // 0xE4
         else if (opCode == 0xE4) {
             // A call operation is performed to the parity bit is zero.
@@ -479,10 +485,19 @@ int main(int argc, char **argv) {
         else if (opCode == 0xE8) {
             // Returns if the parity bit is set (even parity).
             printf("RPE");
+        } // 0xE9
+        else if (opCode == 0xE9) {
+            // The content of the H register replaces the most significant 8 bits of the program counter.
+            // The content of the L register replaces the least significant 8 bits of the program counter.
+            printf("PCHL");
         } // 0xEA
         else if (opCode == 0xEA) {
             // Jump to the specified address if the parity bit is set.
             printf("JPE %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xEB
+        else if (opCode == 0xEB) {
+            // The 16 bits of data held in H and L register are exchanged with the 16 bits of data in D and E registers.
+            printf("XCHG");
         } // 0xEE
         else if (opCode == 0xEE) {
             // Format: XRI data
@@ -502,6 +517,10 @@ int main(int argc, char **argv) {
         else if (opCode == 0xF2) {
             // Jump to the specified address if the sign bit is zero.
             printf("JP %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xF3
+        else if (opCode == 0xF3) {
+            // Disable the interrupt system.
+            printf("DI");
         } // 0xF4
         else if (opCode == 0xF4) {
             // A call operation is performed to the sign bit is zero.
@@ -521,6 +540,10 @@ int main(int argc, char **argv) {
         else if (opCode == 0xFA) {
             // Jump to the specified address the sign bit is one.
             printf("JM %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xFB
+        else if (opCode == 0xFB) {
+            // Enable the interrupt system.
+            printf("EI");
         } // 0xFC
         else if (opCode == 0xFC) {
             // A call operation is performed to the address if the sign bit is one.
@@ -532,6 +555,8 @@ int main(int argc, char **argv) {
             // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is compared with the accumulator.
             printf("CPI %02x", readNextByte(binaryFile, &instructionPointer));
+        } else {
+            fprintf(stderr, "Invaild opcode %02x\n", opCode);
         }
         printf("\n");
     }
