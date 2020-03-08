@@ -256,7 +256,7 @@ int main(int argc, char **argv) {
         } // 0x76
         else if (opCode == 0x76) {
             // The program counter is incremented to the next sequential instruction. The CPU then enters the STOPPED
-            // state and no furthur activity takes place until an interrupt occurs.
+            // state and no further activity takes place until an interrupt occurs.
             printf("HLT");
         } // 0x40-0x7F, except 0x76
         else if ((opCode & 0xC0) == 0x40) {
@@ -341,17 +341,6 @@ int main(int argc, char **argv) {
             // If PSW is specified, then the state of the five condition bits are restored.
             // The stack pointer is incremented by two after this operation.
             printf("POP %s", getRegisterPairForStackOperations(opCode));
-        } // 0xC5, 0xD5, 0xE5, 0xF5
-        else if ((opCode & 0xCF) == 0xC5) {
-            // Format: PUSH rp
-            // reg can be B, D, H, or PSW
-            // Flags affected: CY, S, Z, P only if reg is PSW
-            // The contents of the specified registers are stored in the stack. The content of the first register
-            // is stored at the byte addressed by the stack pointer, and the content of the second register is
-            // is stored at the byte at the address one greater than address indicated by the stack pointer.
-            // If PSW is specified, then the state of the five condition bits is stored.
-            // The stack pointer is decremented by two after this operation.
-            printf("PUSH %s", getRegisterPairForStackOperations(opCode));
         } // 0xC2
         else if (opCode == 0xC2) {
             // Jump to the specified address if zero bit is unset.
@@ -364,6 +353,17 @@ int main(int argc, char **argv) {
         else if (opCode == 0xC4) {
             // A call operation is performed to the address if the zero bit is unset.
             printf("CNZ %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xC5, 0xD5, 0xE5, 0xF5
+        else if ((opCode & 0xCF) == 0xC5) {
+            // Format: PUSH rp
+            // reg can be B, D, H, or PSW
+            // Flags affected: CY, S, Z, P only if reg is PSW
+            // The contents of the specified registers are stored in the stack. The content of the first register
+            // is stored at the byte addressed by the stack pointer, and the content of the second register is
+            // is stored at the byte at the address one greater than address indicated by the stack pointer.
+            // If PSW is specified, then the state of the five condition bits is stored.
+            // The stack pointer is decremented by two after this operation.
+            printf("PUSH %s", getRegisterPairForStackOperations(opCode));
         } // 0xC6
         else if (opCode == 0xC6) {
             // Format: ADI data
@@ -498,6 +498,10 @@ int main(int argc, char **argv) {
         else if (opCode == 0xEB) {
             // The 16 bits of data held in H and L register are exchanged with the 16 bits of data in D and E registers.
             printf("XCHG");
+        } // 0xEC
+        else if (opCode == 0xEC) {
+            // A call operation is performed to the address if the parity bit is set.
+            printf("CPE %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xEE
         else if (opCode == 0xEE) {
             // Format: XRI data
@@ -505,10 +509,6 @@ int main(int argc, char **argv) {
             // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is XORed with the accumulator.
             printf("XRI %02x", readNextByte(binaryFile, &instructionPointer));
-        } // 0xEC
-        else if (opCode == 0xEC) {
-            // A call operation is performed to the address if the parity bit is set.
-            printf("CPE %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xF0
         else if (opCode == 0xF0) {
             // Returns if the sign bit is zero (indicating a positive result).
