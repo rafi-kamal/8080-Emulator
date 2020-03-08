@@ -208,7 +208,7 @@ int main(int argc, char **argv) {
             // addr is a 16-bit value
             // The content of the L register is stored at the 16-bit memory address.
             // The content of the H register is stored at the next higher memory address.
-            printf("SHLD %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("SHLD $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0x27
         else if (opCode == 0x27) {
             // The 8-bit hexadecimal number in the accumulator is converted to two 4-bit binary coded decimal digits.
@@ -228,7 +228,7 @@ int main(int argc, char **argv) {
             // addr is a 16-bit value
             // The byte at the 16-bit memory address is stored in the L register.
             // The byte at the next higher memory address is stored in the H register.
-            printf("LHLD %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("LHLD $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0x2F
         else if (opCode == 0x2F) {
             // Each bit in the accumulator is complemented
@@ -238,7 +238,7 @@ int main(int argc, char **argv) {
             // Format: STA addr
             // addr is a 16-bit value
             // The contents of the accumulator replaces the byte at the specified memory address
-            printf("STA %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("STA $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0x37
         else if (opCode == 0x37) {
             // Set the carry bit to 1
@@ -248,7 +248,7 @@ int main(int argc, char **argv) {
             // Format: LDA addr
             // addr is a 16-bit value
             // The byte at the specified memory address replaces the contents of the accumulator
-            printf("LDA %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("LDA $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0x3F
         else if (opCode == 0x3F) {
             // Complement the carry bit
@@ -344,15 +344,15 @@ int main(int argc, char **argv) {
         } // 0xC2
         else if (opCode == 0xC2) {
             // Jump to the specified address if zero bit is unset.
-            printf("JNZ %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("JNZ $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xC3
         else if (opCode == 0xC3) {
             // Jump to the specified address.
-            printf("JMP %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("JMP $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xC4
         else if (opCode == 0xC4) {
             // A call operation is performed to the address if the zero bit is unset.
-            printf("CNZ %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("CNZ $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xC5, 0xD5, 0xE5, 0xF5
         else if ((opCode & 0xCF) == 0xC5) {
             // Format: PUSH rp
@@ -370,7 +370,7 @@ int main(int argc, char **argv) {
             // data is a 8 byte value
             // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is added to the accumulator.
-            printf("ADI %02x", readNextByte(binaryFile, &instructionPointer));
+            printf("ADI #$%02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xC7, 0xCF, 0xD7, 0xDF, 0xE7, 0xEF, 0xF7, 0xFF
         else if ((opCode & 0xC7) == 0xC7) {
             // Format: RST exp
@@ -390,22 +390,22 @@ int main(int argc, char **argv) {
         } // 0xCA
         else if (opCode == 0xCA) {
             // Jump to the specified address if zero bit is set.
-            printf("JZ %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("JZ $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xCC
         else if (opCode == 0xCC) {
             // A call operation is performed to the address if the zero bit is set.
-            printf("CZ %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("CZ $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xCD
         else if (opCode == 0xCD) {
             // A call operation is unconditionally performed.
-            printf("CALL %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("CALL $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xCE
         else if (opCode == 0xCE) {
             // Format: ACI data
             // data is a 8 byte value
             // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is added to the accumulator along with carry bit.
-            printf("ACI %02x", readNextByte(binaryFile, &instructionPointer));
+            printf("ACI #$%02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xD0
         else if (opCode == 0xD0) {
             // Returns if the carry bit is unset.
@@ -413,7 +413,7 @@ int main(int argc, char **argv) {
         } // 0xD2
         else if (opCode == 0xD2) {
             // Jump to the specified address if carry bit is not set.
-            printf("JNC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("JNC $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xD3
         else if (opCode == 0xD3) {
             // Format: OUT exp
@@ -423,14 +423,14 @@ int main(int argc, char **argv) {
         } // 0xD4
         else if (opCode == 0xD4) {
             // A call operation is performed if the carry bit is not set.
-            printf("CNC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("CNC $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xD6
         else if (opCode == 0xD6) {
             // Format: SUI data
             // data is a 8 byte value
             // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is subtracted from the accumulator.
-            printf("SUI %02x", readNextByte(binaryFile, &instructionPointer));
+            printf("SUI #$%02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xD8
         else if (opCode == 0xD8) {
             // Returns if the carry bit is set.
@@ -438,7 +438,7 @@ int main(int argc, char **argv) {
         } // 0xDA
         else if (opCode == 0xDA) {
             // Jump to the specified address if carry bit is set.
-            printf("JC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("JC $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xDB
         else if (opCode == 0xDB) {
             // Format: IN exp
@@ -448,14 +448,14 @@ int main(int argc, char **argv) {
         } // 0xDC
         else if (opCode == 0xDC) {
             // A call operation is performed to the carry bit is set.
-            printf("CC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("CC $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xDE
         else if (opCode == 0xDE) {
             // Format: SBI data
             // data is a 8 byte value
             // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is subtracted from the accumulator along with the carry bit.
-            printf("SBI %02x", readNextByte(binaryFile, &instructionPointer));
+            printf("SBI #$%02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xE0
         else if (opCode == 0xE0) {
             // Returns if the parity bit is zero (odd parity).
@@ -463,7 +463,7 @@ int main(int argc, char **argv) {
         } // 0xE2
         else if (opCode == 0xE2) {
             // Jump to the specified address if the parity bit is zero.
-            printf("JPO %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("JPO $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xE3
         else if (opCode == 0xE3) {
             // The content of the L register is exchanged with the content of the memory byte addressed by the stack
@@ -473,14 +473,14 @@ int main(int argc, char **argv) {
         } // 0xE4
         else if (opCode == 0xE4) {
             // A call operation is performed to the parity bit is zero.
-            printf("CPO %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("CPO $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xE6
         else if (opCode == 0xE6) {
             // Format: ANI data
             // data is a 8 byte value
             // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is ANDed with the accumulator.
-            printf("ANI %02x", readNextByte(binaryFile, &instructionPointer));
+            printf("ANI #$%02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xE8
         else if (opCode == 0xE8) {
             // Returns if the parity bit is set (even parity).
@@ -493,7 +493,7 @@ int main(int argc, char **argv) {
         } // 0xEA
         else if (opCode == 0xEA) {
             // Jump to the specified address if the parity bit is set.
-            printf("JPE %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("JPE $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xEB
         else if (opCode == 0xEB) {
             // The 16 bits of data held in H and L register are exchanged with the 16 bits of data in D and E registers.
@@ -501,14 +501,14 @@ int main(int argc, char **argv) {
         } // 0xEC
         else if (opCode == 0xEC) {
             // A call operation is performed to the address if the parity bit is set.
-            printf("CPE %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("CPE $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xEE
         else if (opCode == 0xEE) {
             // Format: XRI data
             // data is a 8 byte value
             // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is XORed with the accumulator.
-            printf("XRI %02x", readNextByte(binaryFile, &instructionPointer));
+            printf("XRI #$%02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xF0
         else if (opCode == 0xF0) {
             // Returns if the sign bit is zero (indicating a positive result).
@@ -516,7 +516,7 @@ int main(int argc, char **argv) {
         } // 0xF2
         else if (opCode == 0xF2) {
             // Jump to the specified address if the sign bit is zero.
-            printf("JP %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("JP $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xF3
         else if (opCode == 0xF3) {
             // Disable the interrupt system.
@@ -524,14 +524,14 @@ int main(int argc, char **argv) {
         } // 0xF4
         else if (opCode == 0xF4) {
             // A call operation is performed to the sign bit is zero.
-            printf("CP %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("CP $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xF6
         else if (opCode == 0xF6) {
             // Format: ORI data
             // data is a 8 byte value
             // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is ORed with the accumulator.
-            printf("ORI %02x", readNextByte(binaryFile, &instructionPointer));
+            printf("ORI #$%02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xF8
         else if (opCode == 0xF8) {
             // Returns if the sign bit is one (indicating a minus result).
@@ -539,7 +539,7 @@ int main(int argc, char **argv) {
         } // 0xFA
         else if (opCode == 0xFA) {
             // Jump to the specified address the sign bit is one.
-            printf("JM %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("JM $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xFB
         else if (opCode == 0xFB) {
             // Enable the interrupt system.
@@ -547,14 +547,14 @@ int main(int argc, char **argv) {
         } // 0xFC
         else if (opCode == 0xFC) {
             // A call operation is performed to the address if the sign bit is one.
-            printf("CM %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+            printf("CM $%s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
         } // 0xFE
         else if (opCode == 0xFE) {
             // Format: CPI data
             // data is a 8 byte value
             // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is compared with the accumulator.
-            printf("CPI %02x", readNextByte(binaryFile, &instructionPointer));
+            printf("CPI #$%02x", readNextByte(binaryFile, &instructionPointer));
         } else {
             fprintf(stderr, "Invaild opcode %02x\n", opCode);
         }
