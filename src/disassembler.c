@@ -17,6 +17,30 @@ char *getLittleIndian2HexBytes(FILE *fp, int *instructionPointer) {
     return hexBytes;
 }
 
+char *getRegister(int threeBits) {
+    switch (threeBits) {
+        case 0:
+            return "B";
+        case 1:
+            return "C";
+        case 2:
+            return "D";
+        case 3:
+            return "E";
+        case 4:
+            return "H";
+        case 5:
+            return "L";
+        case 6:
+            return "M";
+        case 7:
+            return "A";
+        default:
+            fprintf(stderr, "Invalid register bits %02X", threeBits);
+            exit(1);
+    }
+}
+
 char *getRegisterPairInBits23(int opCode) {
     switch ((opCode & 0x30) >> 4) {
         case 0b00:
@@ -54,30 +78,6 @@ char *getStaxLdaxRegisterPair(int opCode) {
         return "D";
     } else {
         return "B";
-    }
-}
-
-char *getRegister(int threeBits) {
-    switch (threeBits) {
-        case 0:
-            return "B";
-        case 1:
-            return "C";
-        case 2:
-            return "D";
-        case 3:
-            return "E";
-        case 4:
-            return "H";
-        case 5:
-            return "L";
-        case 6:
-            return "M";
-        case 7:
-            return "A";
-        default:
-            fprintf(stderr, "Invalid register bits %02X", threeBits);
-            exit(1);
     }
 }
 
@@ -368,6 +368,7 @@ int main(int argc, char **argv) {
         else if (opCode == 0xC6) {
             // Format: ADI data
             // data is a 8 byte value
+            // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is added to the accumulator.
             printf("ADI %02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xC7, 0xCF, 0xD7, 0xDF, 0xE7, 0xEF, 0xF7, 0xFF
@@ -402,6 +403,7 @@ int main(int argc, char **argv) {
         else if (opCode == 0xCE) {
             // Format: ACI data
             // data is a 8 byte value
+            // Flags affected: CY, Z, S, P, AC
             // The byte of immediate data is added to the accumulator along with carry bit.
             printf("ACI %02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xD0
@@ -422,6 +424,13 @@ int main(int argc, char **argv) {
         else if (opCode == 0xD4) {
             // A call operation is performed if the carry bit is not set.
             printf("CNC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xD6
+        else if (opCode == 0xD6) {
+            // Format: SUI data
+            // data is a 8 byte value
+            // Flags affected: CY, Z, S, P, AC
+            // The byte of immediate data is subtracted from the accumulator.
+            printf("SUI %02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xD8
         else if (opCode == 0xD8) {
             // Returns if the carry bit is set.
@@ -434,6 +443,13 @@ int main(int argc, char **argv) {
         else if (opCode == 0xDC) {
             // A call operation is performed to the carry bit is set.
             printf("CC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xDE
+        else if (opCode == 0xDE) {
+            // Format: SBI data
+            // data is a 8 byte value
+            // Flags affected: CY, Z, S, P, AC
+            // The byte of immediate data is subtracted from the accumulator along with the carry bit.
+            printf("SBI %02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xE0
         else if (opCode == 0xE0) {
             // Returns if the parity bit is zero (odd parity).
@@ -446,6 +462,13 @@ int main(int argc, char **argv) {
         else if (opCode == 0xE4) {
             // A call operation is performed to the parity bit is zero.
             printf("CPO %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xE6
+        else if (opCode == 0xE6) {
+            // Format: ANI data
+            // data is a 8 byte value
+            // Flags affected: CY, Z, S, P, AC
+            // The byte of immediate data is ANDed with the accumulator.
+            printf("ANI %02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xE8
         else if (opCode == 0xE8) {
             // Returns if the parity bit is set (even parity).
@@ -454,6 +477,13 @@ int main(int argc, char **argv) {
         else if (opCode == 0xEA) {
             // Jump to the specified address if the parity bit is set.
             printf("JPE %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xEE
+        else if (opCode == 0xEE) {
+            // Format: XRI data
+            // data is a 8 byte value
+            // Flags affected: CY, Z, S, P, AC
+            // The byte of immediate data is XORed with the accumulator.
+            printf("XRI %02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xEC
         else if (opCode == 0xEC) {
             // A call operation is performed to the address if the parity bit is set.
@@ -470,6 +500,13 @@ int main(int argc, char **argv) {
         else if (opCode == 0xF4) {
             // A call operation is performed to the sign bit is zero.
             printf("CP %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xF6
+        else if (opCode == 0xF6) {
+            // Format: ORI data
+            // data is a 8 byte value
+            // Flags affected: CY, Z, S, P, AC
+            // The byte of immediate data is ORed with the accumulator.
+            printf("ORI %02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xF8
         else if (opCode == 0xF8) {
             // Returns if the sign bit is one (indicating a minus result).
@@ -482,6 +519,13 @@ int main(int argc, char **argv) {
         else if (opCode == 0xFC) {
             // A call operation is performed to the address if the sign bit is one.
             printf("CM %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xFE
+        else if (opCode == 0xFE) {
+            // Format: CPI data
+            // data is a 8 byte value
+            // Flags affected: CY, Z, S, P, AC
+            // The byte of immediate data is compared with the accumulator.
+            printf("CPI %02x", readNextByte(binaryFile, &instructionPointer));
         }
         printf("\n");
     }
