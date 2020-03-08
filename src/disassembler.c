@@ -1,3 +1,6 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-signed-bitwise"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -487,3 +490,5 @@ int main(int argc, char **argv) {
 
     return 0;
 }
+
+#pragma clang diagnostic pop
