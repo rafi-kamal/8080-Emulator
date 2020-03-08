@@ -439,6 +439,12 @@ int main(int argc, char **argv) {
         else if (opCode == 0xDA) {
             // Jump to the specified address if carry bit is set.
             printf("JC %s", getLittleIndian2HexBytes(binaryFile, &instructionPointer));
+        } // 0xDB
+        else if (opCode == 0xDB) {
+            // Format: IN exp
+            // exp is a 8-bit value
+            // A byte of data is read from the device number exp and it replaces the contents of the accumulator
+            printf("IN %02x", readNextByte(binaryFile, &instructionPointer));
         } // 0xDC
         else if (opCode == 0xDC) {
             // A call operation is performed to the carry bit is set.
